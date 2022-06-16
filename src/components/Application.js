@@ -96,9 +96,25 @@ export default function Application(props) {
   function save(name, interviewer) {
     const interview = {
       student: name,
-      interviewer,
+      interviewer
     };
-  }
+  
+  //   transition(SAVING);
+  
+  //   props
+  //     .bookInterview(props.id, interview)
+  //     .then(() => transition(SHOW))
+  //     .catch(error => transition(ERROR_SAVE, true));
+  // }
+  
+  // function cancel(id) {
+  //   transition(DELETE);
+
+  //   props.cancelInterview(props.id).then(() => {
+  //     transition(EMPTY);
+  //   });
+  //   .catch(error => transition(ERROR_SAVE, true));
+  // }
 
   function cancelInterview(id) {
     const appointment = {
@@ -169,4 +185,5 @@ export default function Application(props) {
       </section>
     </main>
   );
+}
 }
