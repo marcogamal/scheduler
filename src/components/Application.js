@@ -11,7 +11,7 @@ import {
 import useApplicationData from "hooks/useApplicationData";
 
 export default function Application(props) {
-  const { state, setDay, bookInterview, cancelInterview } =
+  const { state, setDay, bookInterview, cancelInterview, setState } =
     useApplicationData();
 
   // function save(name, interviewer) {
@@ -38,6 +38,27 @@ export default function Application(props) {
   // }
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
+  let spots = 0;
+
+  const eachAppointment = dailyAppointments.map((item) => {
+    const interview = getInterview(state, item.interview);
+    const interviewers = getInterviewersForDay(state, state.day);
+
+    if (item.interview === null) {
+      spots += 1;
+    }
+
+    return (
+      <Appointment
+        key={item.id}
+        {...item}
+        interview={interview}
+        interviewers={interviewers}
+        bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
+      />
+    );
+  });
 
   return (
     <main className="layout">
@@ -49,7 +70,7 @@ export default function Application(props) {
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-          <DayList days={state.days} value={state.day} onChange={setDay} />
+          <DayList days={state.days} value={state.day} onChange={setDay} spotsCount={state.spots}/>
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"
@@ -58,20 +79,7 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {dailyAppointments.map((item) => {
-          const interview = getInterview(state, item.interview);
-          const interviewers = getInterviewersForDay(state, state.day);
-          return (
-            <Appointment
-              key={item.id}
-              {...item}
-              interview={interview}
-              interviewers={interviewers}
-              bookInterview={bookInterview}
-              cancelInterview={cancelInterview}
-            />
-          );
-        })}
+        {eachAppointment}
         <Appointment key="last" time="5pm" />
       </section>
     </main>
