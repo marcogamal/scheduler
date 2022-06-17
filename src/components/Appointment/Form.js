@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Button from "components/Button";
 import InterviewerList from "components/InterviewerList";
-const [error, setError] = useState("");
 
 export default function Form(props) {
   const [student, setStudent] = useState(props.student || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
+  const [error, setError] = useState("");
   const reset = () => {
     setStudent("");
     setInterviewer(null);
@@ -34,6 +34,7 @@ export default function Form(props) {
             onChange={(event) => {
               setStudent(event.target.value);
             }}
+            data-testid="student-name-input"
           />
           <section className="appointment__validation">{error}</section>
         </form>

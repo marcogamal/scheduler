@@ -66,12 +66,13 @@ export default function useApplicationData() {
 
     return axios
       .put(`http://localhost:8001/api/appointments/${id}`, { interview })
-      .then((res) => {
+      .then(() => {
         setState({
           ...state,
           appointments,
           days,
         });
+        updateSpots(state.days, appointments);
       });
   }
 

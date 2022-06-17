@@ -32,7 +32,7 @@ export default function Appointment(props) {
     transition(SAVING);
 
     props.bookInterview(props.id, interview).then(() => {
-      transition(SHOW).catch((error) => transition(ERROR_SAVE, true));
+      transition(SHOW)}).catch((error) => {transition(ERROR_SAVE, true);
     });
   }
 
@@ -40,7 +40,7 @@ export default function Appointment(props) {
     transition(DELETE, true);
 
     props.cancelInterview(props.id).then(() => {
-      transition(EMPTY).catch((error) => transition(ERROR_DELETE, true));
+      transition(EMPTY)}).catch((error) => {transition(ERROR_DELETE, true);
     });
   }
 
@@ -59,7 +59,7 @@ export default function Appointment(props) {
       {mode === CREATE && (
         <Form
           interviewers={props.interviewers}
-          onCancel={() => back}
+          onCancel={() => back()}
           onSave={() => save}
         />
       )}
