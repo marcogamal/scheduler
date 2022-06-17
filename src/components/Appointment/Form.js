@@ -14,17 +14,28 @@ export default function Form(props) {
     reset();
     props.onCancel();
   };
-  function onSave() {
-    !student
-      ? setError("Student name cannot be blank")
-      : !interviewer
-      ? setError("Interviewer must be choose")
-      : props.onSave(student, interviewer);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('You clicked submit.')
+  }
+
+  const validate = () => {
+    if(student === "") {
+      setError("Please fill out the name");
+      return;
+    }
+
+    if(interviewer === null) {
+      setError("You need to select an interviewer");
+      return;
+    }
+
+    props.onSave(student, interviewer);
   }
   return (
     <main className="appointment__card appointment__card--create">
       <section className="appointment__card-left">
-        <form autoComplete="off" onSubmit={(event) => event.preventDefault()}>
+        <form autoComplete="off" onSubmit={handleSubmit}>
           <input
             className="appointment__create-input text--semi-bold"
             name="name"
@@ -40,7 +51,7 @@ export default function Form(props) {
         </form>
         <InterviewerList
           interviewers={props.interviewers}
-          value={props.interviewer}
+          value={interviewer}
           onChange={setInterviewer}
         />
       </section>
@@ -49,7 +60,7 @@ export default function Form(props) {
           <Button danger onClick={cancel}>
             Cancel
           </Button>
-          <Button confirm onClick={props.onSave}>
+          <Button confirm onClick={validate}>
             Save
           </Button>
         </section>
