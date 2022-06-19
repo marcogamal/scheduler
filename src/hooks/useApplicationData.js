@@ -29,30 +29,6 @@ export default function useApplicationData() {
     setState({ ...state, day });
   };
 
-  function updateSpots(appointments) {
-    const currentDay = state.days.find((day) => {
-      return day.name === state.day;
-    });
-    const currentDayIndex = state.days.findIndex((day) => {
-      return day.name === state.day;
-    });
-
-    const nullAppointments = currentDay.appointments.filter((id) => {
-      return !appointments[id].interview;
-    });
-    let spots = nullAppointments.length;
-
-    const updateCurrentDay = {
-      ...currentDay,
-      spots,
-    };
-
-    let newDays = [...state.days];
-    newDays[currentDayIndex] = updateCurrentDay;
-
-    return newDays;
-  }
-
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
@@ -62,7 +38,19 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment,
     };
-    const days = updateSpots(appointments);
+
+    let days = state.days
+    if (!state.appointments[id].interview) {
+      days = state.days.map((day) => {
+        const updatedDay = { ...day };
+        if (updatedDay.appointments.includes(id)) {
+          updatedDay.spots--;
+          return updatedDay
+        } else {
+          return updatedDay
+        };
+      });
+    };
 
     return axios
       .put(`http://localhost:8001/api/appointments/${id}`, { interview })
@@ -72,7 +60,6 @@ export default function useApplicationData() {
           appointments,
           days,
         });
-        updateSpots(state.days, appointments);
       });
   }
 
@@ -85,7 +72,17 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment,
     };
-    const days = updateSpots(appointments);
+    
+    const days = state.days.map((day) => {
+      const updatedDay = { ...day };
+      if (updatedDay.appointments.includes(id)) {
+        updatedDay.spots++;
+        return updatedDay
+      } else {
+        return updatedDay
+      };
+    });
+
     return axios
       .delete(`http://localhost:8001/api/appointments/${id}`)
       .then((res) => {
